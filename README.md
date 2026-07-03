@@ -34,7 +34,9 @@
 
 ## 本地部署
 
-如果你使用的是本地 Codex 或兼容 skills 的本地 agent，推荐直接把仓库克隆到本机 skills 目录：
+如果你使用的是本地 Codex 或兼容 skills 的本地 agent，需要做两件事：先安装 skill，再让本地 agent 的 `AGENTS.md` 包含触发规则。
+
+第一步，把仓库克隆到本机 skills 目录：
 
 ```bash
 mkdir -p ~/.codex/skills
@@ -48,9 +50,18 @@ cd ~/.codex/skills/ai-coding-workflow
 git pull
 ```
 
-部署后，重新打开本地 agent 会话，或让本地 agent 重新加载 skills。只要本地 agent 能发现 `~/.codex/skills/ai-coding-workflow/SKILL.md`，这个 skill 就可以被自然语言触发。
+第二步，把 agentmd 模板应用到本地 agent 实际读取的 `AGENTS.md`。
 
-如果你的本地 agent 不支持自动发现 skills，可以把 `agents/AGENTS.ai-coding-workflow.generated.md` 作为项目级 agent 协议模板复制到目标项目，再按里面的触发规则使用。
+如果你希望所有本地 Codex 会话都能触发这个 skill，可以先备份再替换全局 agentmd：
+
+```bash
+cp ~/.codex/AGENTS.md ~/.codex/AGENTS.md.bak
+cp ~/.codex/skills/ai-coding-workflow/agents/AGENTS.ai-coding-workflow.generated.md ~/.codex/AGENTS.md
+```
+
+如果你只想让某个项目使用它，就不要替换全局文件，而是把 `agents/AGENTS.ai-coding-workflow.generated.md` 复制到目标项目的 `AGENTS.md`，或把其中 `## 12. Skill 使用策略` 里的 `ai-coding-workflow` 触发规则合并进项目现有的 `AGENTS.md`。
+
+部署后，重新打开本地 agent 会话，或让本地 agent 重新加载 skills。只要本地 agent 能发现 `~/.codex/skills/ai-coding-workflow/SKILL.md`，且当前生效的 `AGENTS.md` 包含 `ai-coding-workflow` 触发规则，就可以用自然语言触发。
 
 ## 自然语言怎么触发
 
