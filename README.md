@@ -25,11 +25,50 @@
 
 ## 如何开始使用
 
-1. 把 `SKILL.md` 放入 Codex 可发现的 skills 目录，例如 `~/.codex/skills/ai-coding-workflow/SKILL.md`。
-2. 新建项目时先使用 `prompts/01_client_interview.md` 或直接说“使用 ai-coding-workflow 做需求访谈”。
-3. 按顺序生成 `docs/PRD.md`、`docs/SPEC.md`、`docs/TASKS.md`。
-4. TASKS 审查通过后，再使用“自动执行当前 Phase”。
-5. 每个 Phase 完成后必须运行“阶段验收”。
+1. 把本仓库部署到本地 agent 可发现的 skills 目录。
+2. 新开一次本地 agent 会话，让 agent 重新读取 skills。
+3. 不需要记复杂命令，直接用自然语言说你要做什么。
+4. 按顺序生成 `docs/PRD.md`、`docs/SPEC.md`、`docs/TASKS.md`。
+5. TASKS 审查通过后，再让 agent “自动执行当前 Phase”。
+6. 每个 Phase 完成后必须运行“阶段验收”。
+
+## 本地部署
+
+如果你使用的是本地 Codex 或兼容 skills 的本地 agent，推荐直接把仓库克隆到本机 skills 目录：
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/zhuy3075-ui/ai-coding-workflow-skill.git ~/.codex/skills/ai-coding-workflow
+```
+
+如果已经安装过，更新时进入目录拉取即可：
+
+```bash
+cd ~/.codex/skills/ai-coding-workflow
+git pull
+```
+
+部署后，重新打开本地 agent 会话，或让本地 agent 重新加载 skills。只要本地 agent 能发现 `~/.codex/skills/ai-coding-workflow/SKILL.md`，这个 skill 就可以被自然语言触发。
+
+如果你的本地 agent 不支持自动发现 skills，可以把 `agents/AGENTS.ai-coding-workflow.generated.md` 作为项目级 agent 协议模板复制到目标项目，再按里面的触发规则使用。
+
+## 自然语言怎么触发
+
+用户不需要输入精确命令，也不需要复制 prompt 文件。只要用自然语言描述当前阶段，本地 agent 就应该触发对应流程。例如：
+
+- “帮我先和甲方做需求访谈，确认这个项目的 MVP 范围。”
+- “根据这些访谈记录生成 PRD。”
+- “审查一下 `docs/PRD.md`，看能不能进入 SPEC。”
+- “基于当前 PRD 生成 SPEC，不要扩大 MVP。”
+- “检查 PRD、SPEC 和 UI 规格是否一致。”
+- “把 PRD 和 SPEC 拆成 TASKS。”
+- “执行当前 Phase 的 P0 任务，完成后停止。”
+- “对刚才完成的 Phase 做阶段验收。”
+- “根据这个报错进入问题修复模式，不要开发新功能。”
+- “判断下一步应该继续哪个 Phase，还是进入 MVP 总验收。”
+- “做 MVP 总验收，并准备交付文档。”
+
+如果本地 agent 没有自动触发，可以显式加一句：“使用 `ai-coding-workflow` 处理这个任务”。例如：“使用 `ai-coding-workflow`，根据访谈记录生成 PRD。”
 
 ## 每个阶段怎么触发
 
